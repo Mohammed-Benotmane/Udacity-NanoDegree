@@ -13,6 +13,14 @@ class Person(db.Model):
     def __repr__(self):
         return f'<Person ID: {self.id}, name: {self.name} >'
 
+class Animal(db.Model):
+    __tablename__="animals"
+    id = db.Column(db.Integer,primary_key= True)
+    race= db.Column(db.String(),nullable=False)
+    isSauvage= db.Column(db.Boolean,default=False)
+    def __repr__(self):
+        return f'<Animal ID: {self.id} , race: {self.race} , isSauvage: {self.isSauvage} >'
+
 
 db.create_all()
 
