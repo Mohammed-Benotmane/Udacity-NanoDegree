@@ -19,7 +19,7 @@
     </style>
     <ul id="todos">
         {% for d in data %}
-        <li><input type="checkbox" {% if d.completed %} checked {% endif %} /> {{d.description}}</li>
+        <li><input class='check-completed' type="checkbox" {% if d.completed %} checked {% endif %} /> {{d.description}}</li>
         {% endfor %}
     </ul>
 
@@ -29,6 +29,24 @@
     </form>
     <div id="error" class="hidden">Something wrong!</div>
     <script>
+    const checkboxs = document.querySelectorAll('.check-completed');
+    for(let i=0; i <checkboxs.length; i++){
+        const checkbox = checkboxs[i];
+        checkbox.onchange = function(e){
+            console.log('evenet', e);
+            const newCompleted = e.target.checked;
+            fetch('/todos/set-completed'),{
+                method: 'POST',
+                body: JSON.stringify({
+                    'completed': newCompleted
+                }),
+                headers:{
+                    'Content-Type': 'application/json'
+                }
+            }
+        }
+    }
+
     document.getElementById('form').onsubmit = function(e){
         e.preventDefault();
         fetch('/todos/create', {
