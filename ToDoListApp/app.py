@@ -38,4 +38,18 @@ def create():
      return jsonify({
          'description' : descr
      })
-    
+
+@app.route('/todos/<todo_id>/set_completed', methods=['POST'])
+def set_completed(todo_id):
+    error = False
+    try: 
+        temp = request.get_json()['completed']
+        todo = ToDoList.query.get(todo_id)
+        todo.completed = temp
+        db.session.commit()
+    except:
+        error = True
+        print(sys.exc_info())
+        db.session.rollback()
+    finally:
+        db.session.close()

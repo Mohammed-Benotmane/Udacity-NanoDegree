@@ -19,7 +19,7 @@
     </style>
     <ul id="todos">
         {% for d in data %}
-        <li><input class='check-completed' type="checkbox" {% if d.completed %} checked {% endif %} /> {{d.description}}</li>
+        <li><input class='check-completed' type="checkbox" data-id="{{d.id}}" {% if d.completed %} checked {% endif %} /> {{d.description}}</li>
         {% endfor %}
     </ul>
 
@@ -35,7 +35,8 @@
         checkbox.onchange = function(e){
             console.log('evenet', e);
             const newCompleted = e.target.checked;
-            fetch('/todos/set-completed'),{
+            const todo_id = e.target.dataset['id'];
+            fetch('/todos/'+ todo_id +'/set_completed',{
                 method: 'POST',
                 body: JSON.stringify({
                     'completed': newCompleted
@@ -43,7 +44,7 @@
                 headers:{
                     'Content-Type': 'application/json'
                 }
-            }
+            })
         }
     }
 
