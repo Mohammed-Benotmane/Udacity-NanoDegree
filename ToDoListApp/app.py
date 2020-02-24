@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
+import sys
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']= 'postgresql://postgres@localhost:5432/udacity'
@@ -21,11 +22,20 @@ def index():
 
 @app.route('/todos/create', methods=['POST'])
 def create():
-    descr = request.get_json()['description']
-    db.session.add(ToDoList(description=descr))
-    db.session.commit()
-    print(descr)
-    return jsonify({
-        'description' : descr
-    })
+    error = False
+    try:
+     descr = request.get_json()['description']
+     db.session.add(ToDoList(description=descr))
+     db.session.commit()
+     print(descr)
+    except:
+     error = True
+     print(sys.exc_info())
+     db.session.rollback()
+    finally:
+     db.session.close()
+    if not error:
+     return jsonify({
+         'description' : descr
+     })
     
