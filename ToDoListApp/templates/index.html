@@ -14,7 +14,7 @@
     </style>
     <ul id="todos">
         {% for d in data %}
-        <li>{{d.description}}</li>
+        <li><input type="checkbox" {% if d.completed %} checked {% endif %} /> {{d.description}}</li>
         {% endfor %}
     </ul>
 
