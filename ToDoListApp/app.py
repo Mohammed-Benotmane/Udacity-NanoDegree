@@ -18,7 +18,7 @@ class ToDoList(db.Model):
 
 @app.route('/')
 def index():
-    return render_template('index.html',data=ToDoList.query.all())
+    return render_template('index.html',data=ToDoList.query.order_by('id').all())
 
 @app.route('/todos/create', methods=['POST'])
 def create():

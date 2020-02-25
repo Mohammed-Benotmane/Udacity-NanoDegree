@@ -15,11 +15,28 @@
             list-style: none;
             padding: 0%;
             margin: 0%;
+            width: 200px;
+        }
+        li {
+            clear: both;
+        }
+        li button{
+            -webkit-appearance: none;
+            border: none;
+            outline: none;
+            color: red;
+            float: right;
+            cursor: pointer;
+            font-size: 20px;
         }
     </style>
     <ul id="todos">
         {% for d in data %}
-        <li><input class='check-completed' type="checkbox" data-id="{{d.id}}" {% if d.completed %} checked {% endif %} /> {{d.description}}</li>
+        <li>
+            <input class='check-completed' type="checkbox" data-id="{{d.id}}" {% if d.completed %} checked {% endif %} />
+             {{d.description}}
+            <button class="cross">&cross;</button>
+            </li>
         {% endfor %}
     </ul>
 
@@ -29,11 +46,30 @@
     </form>
     <div id="error" class="hidden">Something wrong!</div>
     <script>
+    const crosses = document.querySelectorAll('.cross');
+    for(let i=0; i<crosses.length; i++){
+        const crossTemp = crosses[i];
+        crossTemp.onsubmit = function(e){
+            console.log('event', e);
+            const cross_id = e.target.dataset['id'];
+            fetch('/todos/delete',{
+                method: 'GET',
+                body: JSON.stringify({
+                    'deleted' : crossTemp
+                }),
+                headers : {
+                    'Content-Type': 'application/json'
+                }
+            }
+            )
+        }
+    }
+
     const checkboxs = document.querySelectorAll('.check-completed');
     for(let i=0; i <checkboxs.length; i++){
         const checkbox = checkboxs[i];
         checkbox.onchange = function(e){
-            console.log('evenet', e);
+            console.log('event', e);
             const newCompleted = e.target.checked;
             const todo_id = e.target.dataset['id'];
             fetch('/todos/'+ todo_id +'/set_completed',{
