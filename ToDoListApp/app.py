@@ -13,8 +13,17 @@ class ToDoList(db.Model):
     id = db.Column(db.Integer, primary_key= True)
     description = db.Column(db.String(), nullable= False)
     completed = db.Column(db.Boolean, nullable= False,default=False)
+    list_id = db.Column(db.Integer, db.ForeignKey('lists.id'),nullable=False)
     def __repr__(self):
         return f'< ToDo ID: {self.id} , description : {self.description} >'
+
+class List(db.Model):
+    __tablename__= "lists"
+    id= db.Column(db.Integer, primary_key=True)
+    name= db.Column(db.String(),nullable=False)
+    db.relationship('ToDoList',backref='list', lazy=True)
+    def __repr__(self):
+        return f'< List ID: {self.id} , name: {self.name} >'
 
 @app.route('/')
 def index():
