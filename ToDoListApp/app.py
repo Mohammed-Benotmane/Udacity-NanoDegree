@@ -34,10 +34,10 @@ def create():
      db.session.rollback()
     finally:
      db.session.close()
-    if not error:
-     return jsonify({
-         'description' : descr
-     })
+     if not error:
+      return jsonify({
+          'description' : descr
+      })
 
 @app.route('/todos/<todo_id>/set_completed', methods=['POST'])
 def set_completed(todo_id):
@@ -53,3 +53,21 @@ def set_completed(todo_id):
         db.session.rollback()
     finally:
         db.session.close()
+        if not error:
+            return redirect(url_for('index'))
+
+
+@app.route('/todos/<cross_id>/deleted', methods=['DELETE'])
+def deleted(cross_id):
+    error = False
+    try:
+        ToDoList.query.filter(ToDoList.id== cross_id).delete()
+        db.session.commit()
+    except:
+        error= True
+        print(sys.exc_info())
+        db.session.rollback
+    finally:
+        db.session.close()
+        return redirect(url_for('index'))
+
