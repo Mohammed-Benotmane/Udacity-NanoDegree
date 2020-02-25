@@ -24,10 +24,14 @@ class List(db.Model):
     db.relationship('ToDoList',backref='list', lazy=True)
     def __repr__(self):
         return f'< List ID: {self.id} , name: {self.name} >'
+@app.route('/lists/<list_id>')
+def get_list_todos(list_id):
+    return render_template('index.html',data=ToDoList.query.filter(ToDoList.list_id == list_id).order_by('id').all())
+
 
 @app.route('/')
 def index():
-    return render_template('index.html',data=ToDoList.query.order_by('id').all())
+    return redirect(url_for('get_list_todos',list_id=1))
 
 @app.route('/todos/create', methods=['POST'])
 def create():
