@@ -112,27 +112,34 @@ def venues():
     "venues": [{
       "id": 2,
       "name": "The Dueling Pianos Bar",
-      "num_upcoming_shows": 0,
+      "num_upcoming_shows": 0
     }]
   }]
   selected = Venue.query.all()
   print(selected)
-  selected = db.session.query(Venue).order_by(Venue.city).all()
+  selected = db.session.query(Venue).distinct('city',).all()
   print(selected)
+
   for select in selected:
-    data.append({
+    venues = Venue.query.filter(Venue.city == select.city)
+    temp= []
+    for venu in venues:
+      temp.append(
+      {
+      "id": venu.id,
+      "name": venu.name,
+      "num_upcoming_shows": 0
+      }
+      )
+    data.append(
+      {
     "city": select.city,
     "state": select.state,
-    "venues": [{
-      "id": 1,
-      "name": "The Musical Hop",
-      "num_upcoming_shows": 0,
-    }, {
-      "id": 3,
-      "name": "Park Square Live Music & Coffee",
-      "num_upcoming_shows": 1,
-    }]
-    })
+    "venues": temp
+      }
+    )
+      
+
   return render_template('pages/venues.html', areas=data)
 
 @app.route('/venues/search', methods=['POST'])
