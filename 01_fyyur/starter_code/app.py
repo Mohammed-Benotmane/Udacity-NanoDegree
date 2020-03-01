@@ -46,10 +46,7 @@ class Venue(db.Model):
     genres = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean , nullable=False)
     seeking_description = db.Column(db.String(500))
-
-
-
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
+    shows = db.relationship('Artist', secondary= shows, backref= db.backref('shows',lazy=True) )
 
 class Artist(db.Model):
     __tablename__ = 'Artist'
@@ -64,8 +61,7 @@ class Artist(db.Model):
     facebook_link = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean, nullable=False)
     seeking_description = db.Column(db.String(500))
-    shows = db.relationship('Venue', secondary= shows, backref= db.backref('shows',lazy='dynamic') )
-    
+
 #----------------------------------------------------------------------------#
 # Filters.
 #----------------------------------------------------------------------------#
@@ -96,6 +92,8 @@ def index():
 def venues():
   # TODO: replace with real venues data.
   #       num_shows should be aggregated based on number of upcoming shows per venue.
+  
+
   data=[{
     "city": "San Francisco",
     "state": "CA",
@@ -117,7 +115,25 @@ def venues():
       "num_upcoming_shows": 0,
     }]
   }]
-  return render_template('pages/venues.html', areas=data);
+  selected = Venue.query.all()
+  print(selected)
+  selected = db.session.query(Venue).order_by(Venue.city).all()
+  print(selected)
+  for select in selected:
+    data.append({
+    "city": select.city,
+    "state": select.state,
+    "venues": [{
+      "id": 1,
+      "name": "The Musical Hop",
+      "num_upcoming_shows": 0,
+    }, {
+      "id": 3,
+      "name": "Park Square Live Music & Coffee",
+      "num_upcoming_shows": 1,
+    }]
+    })
+  return render_template('pages/venues.html', areas=data)
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
