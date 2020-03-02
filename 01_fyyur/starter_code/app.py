@@ -32,6 +32,13 @@ shows = db.Table('shows',
   db.Column('Start_Time',db.DateTime())
 ) 
 
+class Show(db.Model):
+  __tablename__ = 'Show'
+
+  venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'),primary_key=True)
+  artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'),primary_key=True)
+  start_time= db.Column(db.DateTime(),nullable=False)
+
 class Venue(db.Model):
     __tablename__ = 'Venue'
 
@@ -115,11 +122,16 @@ def venues():
       "num_upcoming_shows": 0
     }]
   }]
-  selected = Venue.query.all()
-  print(selected)
+  
+  #selected = Venue.query.all()
+  #print(selected)
   selected = db.session.query(Venue).distinct('city',).all()
-  print(selected)
-
+  #print(selected)
+  showss = Venue.query.join(Artist, Venue.shows).filter_by(shows='shows', id = shows.id).all()
+  
+  
+  print(showss)
+  
   for select in selected:
     venues = Venue.query.filter(Venue.city == select.city)
     temp= []
