@@ -26,11 +26,6 @@ migrate= Migrate(app,db)
 #----------------------------------------------------------------------------#
 # Models.
 #----------------------------------------------------------------------------#
-shows = db.Table('shows',
-  db.Column('artist_id', db.ForeignKey('Artist.id')),
-  db.Column('venue_id', db.ForeignKey('Venue.id')),
-  db.Column('Start_Time',db.DateTime())
-) 
 
 class Show(db.Model):
   __tablename__ = 'Show'
