@@ -33,6 +33,8 @@ class Show(db.Model):
   venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'),primary_key=True)
   artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'),primary_key=True)
   start_time= db.Column(db.DateTime(),nullable=False)
+  def __repr__(self):
+    return f'<Show venueId: {self.venue_id} , artistId: {self.artist_id}, date: {self.start_time}>'
 
 class Venue(db.Model):
     __tablename__ = 'Venue'
@@ -48,7 +50,7 @@ class Venue(db.Model):
     genres = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean , nullable=False)
     seeking_description = db.Column(db.String(500))
-    shows = db.relationship('Artist', secondary= shows, backref= db.backref('shows',lazy=True) )
+    shows = db.relationship('Show', backref= "Venue")
 
 class Artist(db.Model):
     __tablename__ = 'Artist'
@@ -63,6 +65,7 @@ class Artist(db.Model):
     facebook_link = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean, nullable=False)
     seeking_description = db.Column(db.String(500))
+    shows = db.relationship('Show', backref= "Artist")
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -118,14 +121,12 @@ def venues():
     }]
   }]
   
-  #selected = Venue.query.all()
-  #print(selected)
+  
   selected = db.session.query(Venue).distinct('city',).all()
   #print(selected)
-  showss = Venue.query.join(Artist, Venue.shows).filter_by(shows='shows', id = shows.id).all()
+  shows = Show.query.first()
   
-  
-  print(showss)
+  print(shows)
   
   for select in selected:
     venues = Venue.query.filter(Venue.city == select.city)
