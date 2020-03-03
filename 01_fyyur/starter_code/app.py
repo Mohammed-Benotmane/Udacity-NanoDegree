@@ -123,8 +123,6 @@ def venues():
   
   
   selected = db.session.query(Venue).distinct('city',).all()
-  #print(selected)
-  shows = Show.query.first()
   
   print(shows)
   
@@ -132,11 +130,13 @@ def venues():
     venues = Venue.query.filter(Venue.city == select.city)
     temp= []
     for venu in venues:
+      upcomingCount = Show.query.filter(Show.venue_id == venu.id, Show.start_time < datetime.now()).count()
+      print(upcomingCount)
       temp.append(
       {
       "id": venu.id,
       "name": venu.name,
-      "num_upcoming_shows": 0
+      "num_upcoming_shows": upcomingCount
       }
       )
     data.append(
@@ -152,16 +152,25 @@ def venues():
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
-  # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
-  # seach for Hop should return "The Musical Hop".
+  # TODO: implement search on artists with partial string sea rch. Ensure it is case-insensitive.
+  # search for Hop should return "The Musical Hop".
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
-  response={
-    "count": 1,
-    "data": [{
-      "id": 2,
-      "name": "The Dueling Pianos Bar",
+  venues = Venue.query.filter(Venue.name.ilike(f'%{request.form.get("search_term", "")}%')).all()
+  venuesCount= Venue.query.filter(Venue.name.ilike(f'%{request.form.get("search_term", "")}%')).count()
+  
+  data = []
+
+  for venu in venues:
+    data.append(
+      {
+      "id": venu.id,
+      "name": venu.name,
       "num_upcoming_shows": 0,
-    }]
+    }
+    )
+  response={
+    "count": venuesCount,
+    "data": data
   }
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
