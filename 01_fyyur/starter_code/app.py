@@ -46,6 +46,7 @@ class Venue(db.Model):
     address = db.Column(db.String(120))
     phone = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
+    website = db.Column(db.String(200))
     facebook_link = db.Column(db.String(120))
     genres = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean , nullable=False)
@@ -175,6 +176,7 @@ def search_venues():
 def show_venue(venue_id):
   # shows the venue page with the given venue_id
   # TODO: replace with real venue data from the venues table, using venue_id
+  venueTemp = Venue.query.get(venue_id)
   data1={
     "id": 1,
     "name": "The Musical Hop",
