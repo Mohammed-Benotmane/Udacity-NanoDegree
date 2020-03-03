@@ -64,6 +64,7 @@ class Artist(db.Model):
     genres = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
+    website = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean, nullable=False)
     seeking_description = db.Column(db.String(500))
     shows = db.relationship('Show', backref= "Artist")
@@ -106,7 +107,7 @@ def venues():
     venues = Venue.query.filter(Venue.city == select.city)
     temp= []
     for venu in venues:
-      upcomingCount = Show.query.filter(Show.venue_id == venu.id, Show.start_time < datetime.now()).count()
+      upcomingCount = Show.query.filter(Show.venue_id == venu.id, Show.start_time > datetime.now()).count()
       temp.append(
       {
       "id": venu.id,
@@ -260,9 +261,6 @@ def artists():
 
 @app.route('/artists/search', methods=['POST'])
 def search_artists():
-  # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
-  # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
-  # search for "band" should return "The Wild Sax Band".
   artists = Artist.query.filter(Artist.name.ilike(f'%{request.form.get("search_term", "")}%')).all()
   artistCount = len(artists)
 
@@ -285,26 +283,47 @@ def search_artists():
 def show_artist(artist_id):
   # shows the venue page with the given venue_id
   # TODO: replace with real venue data from the venues table, using venue_id
+  artist = Artist.query.get(artist_id)
+  pastShowsquery= Show.query.filter(Show.artist_id == artist.id, Show.start_time < datetime.now()).all()
+  pastShowsCount = len(pastShowsquery)
+  past_shows = []
+
+  for past in pastShowsquery:
+    past_shows.append({
+      "venue_id": past.venue_id,
+      "venue_name": Venue.query.get(past.venue_id).name,
+      "venue_image_link": Venue.query.get(past.venue_id).image_link,
+      "start_time": str(past.start_time)
+    })
+
+  upcomingShowsquery =Show.query.filter(Show.venue_id == venueTemp.id, Show.start_time > datetime.now()).all()
+  upcoming_shows= []
+  upcomingShowCount = len(upcomingShowsquery)
+
+  for upcoming in upcomingShowsquery:
+    upcoming_shows.append({
+      "artist_id": upcoming.artist_id,
+      "artist_name": Artist.query.get(upcoming.artist_id).name,
+      "artist_image_link": Artist.query.get(upcoming.artist_id).image_link,
+      "start_time": str(upcoming.start_time)
+    })
+
+
   data1={
-    "id": 4,
-    "name": "Guns N Petals",
+    "id": artist.id,
+    "name": artist.name,
     "genres": ["Rock n Roll"],
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "326-123-5000",
-    "website": "https://www.gunsnpetalsband.com",
-    "facebook_link": "https://www.facebook.com/GunsNPetals",
-    "seeking_venue": True,
-    "seeking_description": "Looking for shows to perform at in the San Francisco Bay Area!",
-    "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80",
-    "past_shows": [{
-      "venue_id": 1,
-      "venue_name": "The Musical Hop",
-      "venue_image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
-      "start_time": "2019-05-21T21:30:00.000Z"
-    }],
+    "city": artist.city,
+    "state": artist.state,
+    "phone": artist.phone,
+    "website": artist.website,
+    "facebook_link": artist.facebook_link,
+    "seeking_venue": artist.seeking_venue,
+    "seeking_description": artist.seeking_description,
+    "image_link": artist.image_link,
+    "past_shows": past_shows,
     "upcoming_shows": [],
-    "past_shows_count": 1,
+    "past_shows_count": pastShowsCount,
     "upcoming_shows_count": 0,
   }
   data2={
