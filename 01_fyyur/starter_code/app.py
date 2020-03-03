@@ -218,9 +218,10 @@ def create_venue_submission():
     db.session.rollback()  
   finally:
     db.session.close()
-  
-  # on successful db insert, flash success
-  flash('Venue ' + request.form['name'] + ' was successfully listed!')
+    if error:
+      flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed.')
+    else:
+      flash('Venue ' + request.form['name'] + ' was successfully listed!')
   # TODO: on unsuccessful db insert, flash an error instead.
   #flash('An error occurred. Venue ' + data.name + ' could not be listed.')
   # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
