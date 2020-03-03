@@ -152,9 +152,6 @@ def venues():
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
-  # TODO: implement search on artists with partial string sea rch. Ensure it is case-insensitive.
-  # search for Hop should return "The Musical Hop".
-  # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
   venues = Venue.query.filter(Venue.name.ilike(f'%{request.form.get("search_term", "")}%')).all()
   venuesCount= Venue.query.filter(Venue.name.ilike(f'%{request.form.get("search_term", "")}%')).count()
   
