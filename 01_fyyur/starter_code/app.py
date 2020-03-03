@@ -163,6 +163,19 @@ def show_venue(venue_id):
       "start_time": str(past.start_time)
     })
 
+  upcomingShowsquery =Show.query.filter(Show.venue_id == venueTemp.id, Show.start_time > datetime.now()).all()
+  upcoming_shows= []
+  upcomingShowCount = len(upcomingShowsquery)
+
+  for upcoming in upcomingShowsquery:
+    upcoming_shows.append({
+      "artist_id": upcoming.artist_id,
+      "artist_name": Artist.query.get(upcoming.artist_id).name,
+      "artist_image_link": Artist.query.get(upcoming.artist_id).image_link,
+      "start_time": str(upcoming.start_time)
+    })
+
+
   data1={
     "id": venueTemp.id,
     "name": venueTemp.name,
@@ -177,9 +190,9 @@ def show_venue(venue_id):
     "seeking_description": venueTemp.seeking_description,
     "image_link": venueTemp.image_link,
     "past_shows":past_shows,
-    "upcoming_shows": [],
+    "upcoming_shows": upcoming_shows,
     "past_shows_count": pastShowsCount,
-    "upcoming_shows_count": 0,
+    "upcoming_shows_count": upcomingShowCount,
   }
   data2={
     "id": 2,
