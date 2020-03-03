@@ -45,6 +45,8 @@
 	<div class="col-sm-6">
 		<img src="{{ venue.image_link }}" alt="Venue Image" />
 	</div>
+	<input type="submit" value="Delete" id="deleteButton" data-id="{{ venue.id }}">
+	
 </div>
 <section>
 	<h2 class="monospace">{{ venue.upcoming_shows_count }} Upcoming {% if venue.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
@@ -74,6 +76,18 @@
 		{% endfor %}
 	</div>
 </section>
-
+<script>
+	const deleteTemp = document.getElementById("deleteButton");
+	deleteTemp.onclick = function(e){
+		console.log('event',e);
+		const venue_id = e.target.dataset['id'];
+		fetch('/venues/'+ venue_id,{
+			method: 'DELETE'
+		}
+		).catch(function(){
+			alert('error')
+		})
+	}
+</script>
 {% endblock %}
 
