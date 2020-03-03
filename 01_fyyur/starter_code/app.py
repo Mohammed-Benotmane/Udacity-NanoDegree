@@ -133,11 +133,12 @@ def search_venues():
   data = []
 
   for venu in venues:
+    upcomingCount = Show.query.filter(Show.venue_id == venu.id, Show.start_time > datetime.now()).count()
     data.append(
       {
       "id": venu.id,
       "name": venu.name,
-      "num_upcoming_shows": 0,
+      "num_upcoming_shows": upcomingCount,
     }
     )
   response={
@@ -206,8 +207,6 @@ def create_venue_form():
 
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
-  # TODO: insert form data as a new Venue record in the db, instead
-  # TODO: modify data to be the data object returned from db insertion
   error = False
   try:
     venueTemp = Venue(name=request.form['name'],city=request.form['city'],state=request.form['state'],address=request.form['address'],phone= request.form['phone'],image_link='',website='',facebook_link=request.form['facebook_link'],genres=request.form['genres'], seeking_talent=False,seeking_description='')
@@ -222,9 +221,6 @@ def create_venue_submission():
       flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed.')
     else:
       flash('Venue ' + request.form['name'] + ' was successfully listed!')
-  # TODO: on unsuccessful db insert, flash an error instead.
-  #flash('An error occurred. Venue ' + data.name + ' could not be listed.')
-  # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
   return render_template('pages/home.html')
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
@@ -267,13 +263,21 @@ def search_artists():
   # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
   # search for "band" should return "The Wild Sax Band".
+  artists = Artist.query.filter(Artist.name.ilike(f'%{request.form.get("search_term", "")}%')).all()
+  artistCount = len(artists)
+
+  data= []
+  for artist in artists:
+    upcomingCount = Show.query.filter(Show.artist_id == artist.id, Show.start_time > datetime.now()).count()
+    data.append({
+      "id": artist.id,
+      "name": artist.name,
+      "num_upcoming_shows": upcomingCount,
+    })
+
   response={
-    "count": 1,
-    "data": [{
-      "id": 4,
-      "name": "Guns N Petals",
-      "num_upcoming_shows": 0,
-    }]
+    "count": artistCount,
+    "data": data
   }
   return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
