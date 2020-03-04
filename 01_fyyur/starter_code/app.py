@@ -333,7 +333,7 @@ def edit_artist(artist_id):
   artist={
     "id": artistTemp.id,
     "name": artistTemp.name,
-    "genres": ["Rock n Roll"],
+    "genres": artistTemp.genres,
     "city": artistTemp.city,
     "state": artistTemp.state,
     "phone": artistTemp.phone,
