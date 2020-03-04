@@ -344,15 +344,22 @@ def edit_artist(artist_id):
     "image_link": artistTemp.image_link
 
   }
-  # TODO: populate form with fields from artist with ID <artist_id>
   return render_template('forms/edit_artist.html', form=form, artist=artist)
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
   error = False
   try:
-    artistTemp = Artist(name=request.form['name'],city=request.form['city'],state=request.form['state'],phone= request.form['phone'],genres=request.form['genres'],image_link='',website='',facebook_link=request.form['facebook_link'], seeking_venue=False,seeking_description='')
-    db.session.add(artistTemp)
+    
+    artistTemp = Artist.query.get(artist_id)
+
+
+    artistTemp.name= request.form['name']
+    artistTemp.city= request.form['city']
+    artistTemp.state= request.form['state']
+    artistTemp.phone= request.form['phone']
+    artistTemp.genres= request.form['genres']
+    artistTemp.facebook_link= request.form['facebook_link']
     db.session.commit()
   except:
     error = True
@@ -360,9 +367,9 @@ def edit_artist_submission(artist_id):
   finally:
     db.session.close()
     if error:
-      flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed.')
+      flash('An error occurred. Artist ' + request.form['name'] + ' could not be listed.')
     else:
-      flash('Venue ' + request.form['name'] + ' was successfully listed!')
+      flash('Artist ' + request.form['name'] + ' was successfully listed!')
   return redirect(url_for('show_artist', artist_id=artist_id))
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
