@@ -13,6 +13,7 @@ from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
 from flask_migrate import Migrate
+import sys
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -210,11 +211,12 @@ def create_venue_form():
 def create_venue_submission():
   error = False
   try:
-    venueTemp = Venue(name=request.form['name'],city=request.form['city'],state=request.form['state'],address=request.form['address'],phone= request.form['phone'],image_link='',website='',facebook_link=request.form['facebook_link'],genres=request.form['genres'], seeking_talent=False,seeking_description='')
+    venueTemp = Venue(name=request.form['name'],city=request.form['city'],state=request.form['state'],address=request.form['address'],phone= request.form['phone'],image_link=request.form['image_link'],website='',facebook_link=request.form['facebook_link'],genres=request.form['genres'], seeking_talent=request.form['seeking_talent']=='true',seeking_description=request.form['seeking_description'])
     db.session.add(venueTemp)
     db.session.commit()
   except:
     error = True
+    print(sys.exc_info())
     db.session.rollback()  
   finally:
     db.session.close()
