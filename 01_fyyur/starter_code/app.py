@@ -401,9 +401,13 @@ def edit_venue_submission(venue_id):
     venueTemp.phone= request.form['phone']
     venueTemp.genres= request.form['genres']
     venueTemp.facebook_link= request.form['facebook_link']
+    venueTemp.website= request.form['website']
+    venueTemp.seeking_talent=request.form['seeking_talent']=='true'
+    venueTemp.seeking_description=request.form['seeking_description']
     db.session.commit()
   except:
     error = True
+    print(sys.exc_info())
     db.session.rollback()  
   finally:
     db.session.close()
