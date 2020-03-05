@@ -339,7 +339,7 @@ def edit_artist(artist_id):
   artist={
     "id": artistTemp.id,
     "name": artistTemp.name,
-    "genres": artistTemp.genres,
+    "genres": artistTemp.genres.replace('{','').replace('}','').split(','),
     "city": artistTemp.city,
     "state": artistTemp.state,
     "phone": artistTemp.phone,
@@ -356,12 +356,16 @@ def edit_artist(artist_id):
 def edit_artist_submission(artist_id):
   error = False
   try:
+    genresData = []
+    genres = request.form.getlist('genres')
+    for genre in genres:
+      genresData.append(genre)
     artistTemp = Artist.query.get(artist_id)
     artistTemp.name= request.form['name']
     artistTemp.city= request.form['city']
     artistTemp.state= request.form['state']
     artistTemp.phone= request.form['phone']
-    artistTemp.genres= request.form['genres']
+    artistTemp.genres= genresData
     artistTemp.facebook_link= request.form['facebook_link']
     artistTemp.website =  request.form['website']
     artistTemp.seeking_venue= request.form['seeking_venue'] == 'true'
