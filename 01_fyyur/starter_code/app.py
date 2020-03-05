@@ -175,12 +175,13 @@ def show_venue(venue_id):
       "artist_image_link": Artist.query.get(upcoming.artist_id).image_link,
       "start_time": str(upcoming.start_time)
     })
-
+ 
+  print(venueTemp.genres)
 
   data={
     "id": venueTemp.id,
     "name": venueTemp.name,
-    "genres": ["Jazz", "Reggae", "Swing", "Classical", "Folk"],
+    "genres": venueTemp.genres.replace('{','').replace('}','').split(','),
     "address": venueTemp.address,
     "city": venueTemp.city,
     "state": venueTemp.state,
@@ -209,7 +210,12 @@ def create_venue_form():
 def create_venue_submission():
   error = False
   try:
-    venueTemp = Venue(name=request.form['name'],city=request.form['city'],state=request.form['state'],address=request.form['address'],phone= request.form['phone'],image_link=request.form['image_link'],website=request.form['website'],facebook_link=request.form['facebook_link'],genres=request.form['genres'], seeking_talent=request.form['seeking_talent']=='true',seeking_description=request.form['seeking_description'])
+    genresData = []
+    genres = request.form.getlist('genres')
+    for genre in genres:
+      genresData.append(genre)
+
+    venueTemp = Venue(name=request.form['name'],city=request.form['city'],state=request.form['state'],address=request.form['address'],phone= request.form['phone'],image_link=request.form['image_link'],website=request.form['website'],facebook_link=request.form['facebook_link'],genres=genresData, seeking_talent=request.form['seeking_talent']=='true',seeking_description=request.form['seeking_description'])
     db.session.add(venueTemp)
     db.session.commit()
   except:
@@ -357,6 +363,9 @@ def edit_artist_submission(artist_id):
     artistTemp.phone= request.form['phone']
     artistTemp.genres= request.form['genres']
     artistTemp.facebook_link= request.form['facebook_link']
+    artistTemp.website =  request.form['website']
+    artistTemp.seeking_venue= request.form['seeking_venue'] == 'true'
+    artistTemp.seeking_description = request.form['seeking_description']
     db.session.commit()
   except:
     error = True
@@ -429,7 +438,12 @@ def create_artist_form():
 def create_artist_submission():
   error = False
   try:
-    artistTemp = Artist(name=request.form['name'],city=request.form['city'],state=request.form['state'],phone= request.form['phone'],genres=request.form['genres'],image_link=request.form['image_link'],facebook_link=request.form['facebook_link'],website=request.form['website'], seeking_venue=request.form['seeking_venue']=='true',seeking_description=request.form['seeking_description'])
+    genresData = []
+    genres = request.form.getlist('genres')
+    for genre in genres:
+      genresData.append(genre)
+
+    artistTemp = Artist(name=request.form['name'],city=request.form['city'],state=request.form['state'],phone= request.form['phone'],genres=genresData,image_link=request.form['image_link'],facebook_link=request.form['facebook_link'],website=request.form['website'], seeking_venue=request.form['seeking_venue']=='true',seeking_description=request.form['seeking_description'])
     db.session.add(artistTemp)
     db.session.commit()
   except:
