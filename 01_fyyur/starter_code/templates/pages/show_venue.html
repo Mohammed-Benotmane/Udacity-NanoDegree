@@ -45,7 +45,10 @@
 	<div class="col-sm-6">
 		<img src="{{ venue.image_link }}" alt="Venue Image" />
 	</div>
-	<input type="submit" value="Delete" id="deleteButton" data-id="{{ venue.id }}">
+	<input type="submit" value="Delete" id="deleteButton" data-id="{{ venue.id }}" class="btn btn-primary btn-lg btn-block" style="width: 80px;">
+	<input type="submit" value="Edit" id="editButton" class="btn btn-primary btn-lg btn-block" style="width: 80px;" onclick="function editing(){
+		window.location.href='/venues/{{venue.id}}/edit';
+	}editing();">
 	
 </div>
 <section>

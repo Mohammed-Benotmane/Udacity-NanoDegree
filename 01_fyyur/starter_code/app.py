@@ -151,8 +151,6 @@ def search_venues():
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
-  # shows the venue page with the given venue_id
-  # TODO: replace with real venue data from the venues table, using venue_id
   venueTemp = Venue.query.get(venue_id)
   pastShowsquery= Show.query.filter(Show.venue_id == venueTemp.id, Show.start_time < datetime.now()).all()
   pastShowsCount = len(pastShowsquery)
@@ -211,7 +209,7 @@ def create_venue_form():
 def create_venue_submission():
   error = False
   try:
-    venueTemp = Venue(name=request.form['name'],city=request.form['city'],state=request.form['state'],address=request.form['address'],phone= request.form['phone'],image_link=request.form['image_link'],website='',facebook_link=request.form['facebook_link'],genres=request.form['genres'], seeking_talent=request.form['seeking_talent']=='true',seeking_description=request.form['seeking_description'])
+    venueTemp = Venue(name=request.form['name'],city=request.form['city'],state=request.form['state'],address=request.form['address'],phone= request.form['phone'],image_link=request.form['image_link'],website=request.form['website'],facebook_link=request.form['facebook_link'],genres=request.form['genres'], seeking_talent=request.form['seeking_talent']=='true',seeking_description=request.form['seeking_description'])
     db.session.add(venueTemp)
     db.session.commit()
   except:
@@ -427,7 +425,7 @@ def create_artist_form():
 def create_artist_submission():
   error = False
   try:
-    artistTemp = Artist(name=request.form['name'],city=request.form['city'],state=request.form['state'],phone= request.form['phone'],genres=request.form['genres'],image_link='',facebook_link=request.form['facebook_link'],website='', seeking_venue=False,seeking_description='')
+    artistTemp = Artist(name=request.form['name'],city=request.form['city'],state=request.form['state'],phone= request.form['phone'],genres=request.form['genres'],image_link=request.form['image_link'],facebook_link=request.form['facebook_link'],website=request.form['website'], seeking_venue=request.form['seeking_venue']=='true',seeking_description=request.form['seeking_description'])
     db.session.add(artistTemp)
     db.session.commit()
   except:

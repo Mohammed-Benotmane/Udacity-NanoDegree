@@ -234,4 +234,16 @@ class ArtistForm(Form):
         'facebook_link', validators=[URL()]
     )
 
-# TODO IMPLEMENT NEW ARTIST FORM AND NEW SHOW FORM
+    website = StringField(
+        'website', validators=[URL()]
+    )
+
+    seeking_venue = RadioField(
+        'seeking_venue', validators=[URL()],choices=[
+            ('true', 'Yes'),
+            ('false', 'No')]
+    )
+    seeking_description = StringField(
+        'seeking_description', validators=[URL()]
+    )
+
