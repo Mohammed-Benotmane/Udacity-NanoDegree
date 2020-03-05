@@ -314,7 +314,7 @@ def show_artist(artist_id):
   data={
     "id": artist.id,
     "name": artist.name,
-    "genres": ["Rock n Roll"],
+    "genres": artist.genres.replace('{','').replace('}','').split(','),
     "city": artist.city,
     "state": artist.state,
     "phone": artist.phone,
