@@ -382,10 +382,11 @@ def edit_artist_submission(artist_id):
 def edit_venue(venue_id):
   form = VenueForm()
   venueTemp = Venue.query.get(venue_id)
+  
   venue={
     "id": venue_id,
     "name": venueTemp.name,
-    "genres": venueTemp.genres,
+    "genres": venueTemp.genres.replace('{','').replace('}','').split(','),
     "address": venueTemp.address,
     "city": venueTemp.city,
     "state": venueTemp.state,
@@ -402,13 +403,17 @@ def edit_venue(venue_id):
 def edit_venue_submission(venue_id):
   error = False
   try:
+    genresData = []
+    genres = request.form.getlist('genres')
+    for genre in genres:
+      genresData.append(genre)
     venueTemp = Venue.query.get(venue_id)
     venueTemp.name= request.form['name']
     venueTemp.city= request.form['city']
     venueTemp.state= request.form['state']
     venueTemp.address= request.form['address']
     venueTemp.phone= request.form['phone']
-    venueTemp.genres= request.form['genres']
+    venueTemp.genres= genresData
     venueTemp.facebook_link= request.form['facebook_link']
     venueTemp.website= request.form['website']
     venueTemp.seeking_talent=request.form['seeking_talent']=='true'
