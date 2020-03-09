@@ -366,6 +366,7 @@ def edit_artist_submission(artist_id):
     artistTemp.state= request.form['state']
     artistTemp.phone= request.form['phone']
     artistTemp.genres= genresData
+    artistTemp.image_link= request.form['image_link']
     artistTemp.facebook_link= request.form['facebook_link']
     artistTemp.website =  request.form['website']
     artistTemp.seeking_venue= request.form['seeking_venue'] == 'true'
@@ -419,6 +420,7 @@ def edit_venue_submission(venue_id):
     venueTemp.phone= request.form['phone']
     venueTemp.genres= genresData
     venueTemp.facebook_link= request.form['facebook_link']
+    venueTemp.image_link= request.form['image_link']
     venueTemp.website= request.form['website']
     venueTemp.seeking_talent=request.form['seeking_talent']=='true'
     venueTemp.seeking_description=request.form['seeking_description']
