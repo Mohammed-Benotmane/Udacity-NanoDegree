@@ -1,5 +1,5 @@
 from flask import Flask,jsonify
-from models import setup_db, Book
+from .models import setup_db, Book
 from flask_cors import CORS
 
 def create_app(test_config =None):
@@ -13,14 +13,12 @@ def create_app(test_config =None):
         response.headers.add('Access-Control-Allow-Methods','GET,POST,DELETE,OPTIONS,PUT')
         return response
 
-    @app.route('/')
-    def hello():
-        return jsonify({
-            'message':'bonjour comon talé vou'
+    @app.route('/books')
+    def get_books():
+        formatted_books = [book.format() for book in books]
+        jsonify({
+            'success':True,
+            'books':formatted_books
         })
-    
-    @app.route('/smiley/<kima>')
-    def smiley(kima):
-        return 'XD'+ kima
 
     return app
