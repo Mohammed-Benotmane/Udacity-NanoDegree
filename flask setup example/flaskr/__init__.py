@@ -17,11 +17,12 @@ def create_app(test_config =None):
     def get_books():
         page= request.args.get('page',1,type=int)
         start= (page-1)*10
+        end= start+10
         books = Book.query.all()
         formatted_books = [book.format() for book in books]
         return jsonify({
             'success':True,
-            'books':formatted_books
+            'books':formatted_books[start:end]
         })
 
     return app
