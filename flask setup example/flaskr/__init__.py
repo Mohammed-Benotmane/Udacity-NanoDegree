@@ -1,4 +1,4 @@
-from flask import Flask,jsonify
+from flask import Flask,jsonify, request
 from .models import setup_db, Book
 from flask_cors import CORS
 
@@ -13,7 +13,7 @@ def create_app(test_config =None):
         response.headers.add('Access-Control-Allow-Methods','GET,POST,DELETE,OPTIONS,PUT')
         return response
 
-    @app.route('/books')
+    @app.route('/books', methods=['GET','POST'])
     def get_books():
         page= request.args.get('page',1,type=int)
         start= (page-1)*10
@@ -22,7 +22,8 @@ def create_app(test_config =None):
         formatted_books = [book.format() for book in books]
         return jsonify({
             'success':True,
-            'books':formatted_books[start:end]
+            'books':formatted_books[start:end],
+            'total_Books': len(formatted_books)
         })
 
     return app
