@@ -15,8 +15,9 @@ def create_app(test_config =None):
 
     @app.route('/books')
     def get_books():
+        books = Book.query.all()
         formatted_books = [book.format() for book in books]
-        jsonify({
+        return jsonify({
             'success':True,
             'books':formatted_books
         })
