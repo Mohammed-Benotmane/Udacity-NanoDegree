@@ -1,4 +1,4 @@
-from flask import Flask,jsonify, request
+from flask import Flask,jsonify, request, abort
 from .models import setup_db, Book
 from flask_cors import CORS
 
@@ -13,6 +13,25 @@ def create_app(test_config =None):
         response.headers.add('Access-Control-Allow-Methods','GET,POST,DELETE,OPTIONS,PUT')
         return response
 
+
+    @app.route('/books/<int:book_id>',methods=['PATCH'])
+    def update_book(book_id):
+        body =request.get_json()
+        try:
+            book = Book.query.filter(Book.id== book_id).one_or_none()
+        
+            if book is None:
+                abort(404)
+            
+            if 'rating' in body:
+                book.rating = int (body.get('rating'))
+            book.update()
+            return jsonify({
+                'success':True
+            })
+        except:
+            abort(400)
+            
     @app.route('/books', methods=['GET','POST'])
     def get_books():
         page= request.args.get('page',1,type=int)
@@ -29,9 +48,12 @@ def create_app(test_config =None):
     @app.route('/books/<int:book_id>')
     def get_specific_book(book_id):
         book = Book.query.filter(Book.id== book_id).one_or_none()
-        return jsonify({
-            'success':True,
-            'book': book.format()
-        })
+        if book is None:
+            abort(404)
+        else:
+            return jsonify({
+                'success':True,
+                'book': book.format()
+            })
 
     return app
