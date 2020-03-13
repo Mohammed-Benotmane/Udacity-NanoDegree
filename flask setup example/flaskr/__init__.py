@@ -58,4 +58,16 @@ def create_app(test_config =None):
                 'book': book.format()
             })
 
+    @app.route('/books/<int:book_id>',methods=['DELETE'])
+    def delete_book(book_id):
+        book = Book.query.filter(Book.id== book_id).one_or_none()
+        books = Book.query.all()
+        if book is None:
+            abort(404)
+        book.delete()
+        return jsonify({
+            'success':True,
+            'deleted':book_id
+        })
+
     return app
