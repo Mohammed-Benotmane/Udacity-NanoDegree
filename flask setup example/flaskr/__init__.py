@@ -67,7 +67,8 @@ def create_app(test_config =None):
         book.delete()
         return jsonify({
             'success':True,
-            'deleted':book_id
+            'deleted':book_id,
+            'books':books
         })
 
     return app
