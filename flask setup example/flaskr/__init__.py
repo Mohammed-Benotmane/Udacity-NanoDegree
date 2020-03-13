@@ -25,5 +25,13 @@ def create_app(test_config =None):
             'books':formatted_books[start:end],
             'total_Books': len(formatted_books)
         })
+    
+    @app.route('/books/<int:book_id>')
+    def get_specific_book(book_id):
+        book = Book.query.filter(Book.id== book_id).one_or_none()
+        return jsonify({
+            'success':True,
+            'book': book.format()
+        })
 
     return app
