@@ -25,14 +25,16 @@ def create_app(test_config =None):
             
             if 'rating' in body:
                 book.rating = int (body.get('rating'))
+
             book.update()
             return jsonify({
-                'success':True
+                'success':True,
+                'id':book.id
             })
         except:
             abort(400)
-            
-    @app.route('/books', methods=['GET','POST'])
+
+    @app.route('/books', methods=['GET'])
     def get_books():
         page= request.args.get('page',1,type=int)
         start= (page-1)*10
