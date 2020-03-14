@@ -71,4 +71,24 @@ def create_app(test_config =None):
             'books':books
         })
 
+    @app.route('/books',methods=['POST'])
+    def create_book():
+        body = request.get_json()
+        new_title= body.get('title',None)
+        new_author= body.get('author',None)
+        new_rating= body.get('rating',None)
+        try:
+            book = Book(title=new_title,author=new_author,rating=new_rating )
+            book.insert()
+            
+        except:
+            abort(422)
+        books = Book.query.all()
+        formatted_books = [book.format() for book in books]
+
+        return jsonify({
+                'success':True,
+                'books': formatted_books
+            })
+
     return app
