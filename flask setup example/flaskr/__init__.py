@@ -1,5 +1,5 @@
 from flask import Flask,jsonify, request, abort
-from .models import setup_db, Book
+from models import setup_db, Book
 from flask_cors import CORS
 
 def create_app(test_config =None):
