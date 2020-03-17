@@ -33,9 +33,10 @@ def create_app(test_config=None):
   @app.route('/categories',methods=['GET'])
   def get_categories():
     categories = Category.query.all()
+    formatted_categories = [category.format() for category in categories]
     return jsonify({
       'success':True,
-      'categories':categories,
+      'categories':formatted_categories,
       'total_categories':len(categories)
     })
 
@@ -56,12 +57,12 @@ def create_app(test_config=None):
     page= request.args.get('page',1,type=int)
     start= (page-1)*10
     end= start+10
-    categories = Category.query.all()
-    formatted_categories = [category.format for category in categories]
+    questions = Question.query.all()
+    formatted_questions = [question.format() for question in questions]
     return jsonify({
       'success':True,
-      'categories':categories,
-      'total_categories':len(categories)
+      'questions':formatted_questions[start:end],
+      'total_questions':len(questions)
     })
 
 
@@ -122,7 +123,11 @@ def create_app(test_config=None):
   Create error handlers for all expected errors 
   including 404 and 422. 
   '''
-  
+  @app.route('/')
+  def hello():
+    return jsonify({
+      'success':True
+    })
   return app
 
     
