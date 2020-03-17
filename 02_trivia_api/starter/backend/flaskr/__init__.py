@@ -125,7 +125,8 @@ def create_app(test_config=None):
       formatted_questions= [qst.format() for qst in questions]
       return jsonify({
         'success':True,
-        'questions':formatted_questions
+        'questions':formatted_questions,
+        'total_questions':len(questions)
       })
     
   '''
@@ -147,13 +148,20 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
-  @app.route('/categories/<int:category_id>/questions')
+  @app.route('/categories/<int:category_id>/questions',methods=['GET'])
   def get_questions_by_category(category_id):
     category= Category.query.filter(Category.id== category_id).one_or_none()
     if(category is None):
       abort(404)
-    temp = Question.query.filter(Question.category == category).all()
-    
+    questions = Question.query.filter(Question.category == category.id).all()
+    formatted_questions = [question.format() for question in questions]
+    return jsonify({
+      'success':True,
+      'category':category.id,
+      'questions':formatted_questions,
+      'total_questions':len(questions)
+    })
+
 
   '''
   @TODO: 
