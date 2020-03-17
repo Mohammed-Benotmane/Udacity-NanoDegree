@@ -100,21 +100,33 @@ def create_app(test_config=None):
   @app.route('/questions',methods=['POST'])
   def create_question():
     body = request.get_json()
-    new_question = body.get("question",None)
-    new_category = body.get("category",None)
-    new_answer = body.get("answer",None)
-    new_difficulty=body.get("difficulty",None)
-    try:
-      question = Question(question=new_question,answer=new_answer,category=new_category,difficulty=new_difficulty)
-      question.insert()
-    except:
-      abort(422)
-    questions=Question.query.all()
-    formatted_questions= [qst.format() for qst in questions]
-    return jsonify({
-      'success':True,
-      'questions':formatted_questions
-    })
+    if(body.get("searchTerm")):
+      search_term = body.get("searchTerm")
+      temp = Question.query.filter(Question.question.ilike(f'%{search_term}%')).all()
+      questions = [t.format() for t in temp]
+      if(len(temp)==0):
+        abort(404)
+      return jsonify({
+        'success':True,
+        'questions': questions,
+        'total_questions': len(temp)
+      })
+    else:
+      new_question = body.get("question",None)
+      new_category = body.get("category",None)
+      new_answer = body.get("answer",None)
+      new_difficulty=body.get("difficulty",None)
+      try:
+        question = Question(question=new_question,answer=new_answer,category=new_category,difficulty=new_difficulty)
+        question.insert()
+      except:
+        abort(422)
+      questions=Question.query.all()
+      formatted_questions= [qst.format() for qst in questions]
+      return jsonify({
+        'success':True,
+        'questions':formatted_questions
+      })
     
   '''
   @TODO: 
@@ -126,7 +138,7 @@ def create_app(test_config=None):
   only question that include that string within their question. 
   Try using the word "title" to start. 
   '''
-
+ 
   '''
   @TODO: 
   Create a GET endpoint to get questions based on category. 
@@ -135,7 +147,13 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
-
+  @app.route('/categories/<int:category_id>/questions')
+  def get_questions_by_category(category_id):
+    category= Category.query.filter(Category.id== category_id).one_or_none()
+    if(category is None):
+      abort(404)
+    temp = Question.query.filter(Question.category == category).all()
+    
 
   '''
   @TODO: 
