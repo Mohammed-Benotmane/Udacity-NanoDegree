@@ -84,6 +84,13 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'],False)
         self.assertEqual(data['message'],'resource not found')
 
+    def test_post_search_question(self):
+        res = self.client().post('/questions', json={'searchTerm': 'e'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code,200)
+        self.assertEqual(data['success'],True)
+
+
 
    
 
