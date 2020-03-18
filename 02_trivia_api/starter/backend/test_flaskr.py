@@ -18,6 +18,13 @@ class TriviaTestCase(unittest.TestCase):
         self.database_path = "postgres://{}:{}@{}/{}".format('postgres', '','localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
+        self.new_question = {
+            'question':'where is situated Algeria?',
+            'answer':'North Africa',
+            'difficulty':3,
+            'category': 3
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -62,6 +69,9 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['deleted'],4)
         self.assertTrue(data['questions'])
         self.assertEqual(question,None)
+
+    def test_create_question(self):
+        res = self.client().post('/questions',json={'question':new_question})
 '''
     def test_404_sent_requesting_beyond_valid_page(self):
         res = self.client().get('/questions?page=1000')
