@@ -71,15 +71,14 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(question,None)
 
     def test_create_question(self):
-        res = self.client().post('/questions',json={'question':new_question})
-'''
-    def test_404_sent_requesting_beyond_valid_page(self):
-        res = self.client().get('/questions?page=1000')
+        res = self.client().post('/questions',json=self.new_question)
         data = json.loads(res.data)
-        self.assertEqual(res.status_code,404)
-        self.assertEqual(data['success'],False)
-        self.assertEqual(data['message'],'resource not found')
-'''
+        self.assertEqual(res.status_code,200)
+        self.assertEqual(data['success'],True)
+
+
+    
+
 
    
 
