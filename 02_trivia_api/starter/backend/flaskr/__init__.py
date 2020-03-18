@@ -183,12 +183,16 @@ def create_app(test_config=None):
     body= request.get_json()
     previous_question = body.get('previous_questions')
     category = body.get('quiz_category')
+    print(f"{category} test")
     if ((category is None) or (previous_question is None)):
       abort(404)
-    if(category == 0):
+    
+    
+    if(category["type"] == "click"):
       questions = Question.query.all()
     else:
-      questions = Question.query.filter(Question.category==category).all()
+      category_id =int(category["id"]) + 1
+      questions = Question.query.filter(Question.category==category_id).all()
     
     random_question = random.choice(questions)
     def is_used(question):
@@ -198,7 +202,9 @@ def create_app(test_config=None):
       return used
     if(len(previous_question)== len(questions)):
         return jsonify({
-          'success':True
+          'success':True,
+          'question':None,
+          'previous_questions':previous_question
         })
     while(is_used(random_question)):
       random_question = random.choice(questions)
@@ -206,7 +212,7 @@ def create_app(test_config=None):
     return jsonify({
       'success':True,
       'question':random_question.format(),
-      'previous_question':previous_question
+      'previous_questions':previous_question
     })
 
 

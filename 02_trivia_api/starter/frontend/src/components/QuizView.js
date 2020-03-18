@@ -35,7 +35,7 @@ class QuizView extends Component {
     })
   }
 
-  selectCategory = ({type, id=0}) => {
+  selectCategory = ({type, id}) => {
     this.setState({quizCategory: {type, id}}, this.getNextQuestion)
   }
 
@@ -63,7 +63,7 @@ class QuizView extends Component {
       success: (result) => {
         this.setState({
           showAnswer: false,
-          previousQuestions: previousQuestions,
+          previousQuestions: result.previous_questions,
           currentQuestion: result.question,
           guess: '',
           forceEnd: result.question ? false : true
@@ -111,8 +111,8 @@ class QuizView extends Component {
                       key={id}
                       value={id}
                       className="play-category"
-                      onClick={() => this.selectCategory({type:this.state.categories[id], id})}>
-                      {this.state.categories[id]}
+                      onClick={() => this.selectCategory({type:this.state.categories[id].type, id})}>
+                      {this.state.categories[id].type}
                     </div>
                   )
                 })}
