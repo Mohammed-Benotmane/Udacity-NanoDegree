@@ -25,6 +25,13 @@ class TriviaTestCase(unittest.TestCase):
             'category': 3
         }
 
+        self.new_question_fake = {
+            'question':'where is situated Algeria?',
+            'answer':'North Africa',
+            'difficulty':3,
+            'category': "science"
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -91,7 +98,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'],True)
 
     def test_422_create_question(self):
-        res = self.client().post('/questions')
+        res = self.client().post('/questions',json=self.new_question_fake)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data["success"], False)
