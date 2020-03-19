@@ -31,6 +31,7 @@ class TriviaTestCase(unittest.TestCase):
             'difficulty':3,
             'category': "science"
         }
+        self.category = Category.query.filter(Category.id == 3).one_or_none().format()
 
         # binds the app to the current context
         with self.app.app_context():
@@ -114,7 +115,19 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['questions'])
         self.assertTrue(data['category'])
 
-   
+    def test_play_quiz(self):
+        res = self.client().post('/quizzes',json={
+        "previous_questions":[9],
+        "quiz_category":{
+    	"id":5,
+    	"type":"Sports"
+    }})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code,200)
+        self.assertEqual(data['success'],True)
+        self.assertTrue(data['previous_questions'])
+        self.assertTrue(data['question'])
+
 
 
 

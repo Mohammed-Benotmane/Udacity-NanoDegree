@@ -183,7 +183,6 @@ def create_app(test_config=None):
     body= request.get_json()
     previous_question = body.get('previous_questions')
     category = body.get('quiz_category')
-    print(f"{category} test")
     if ((category is None) or (previous_question is None)):
       abort(404)
     
