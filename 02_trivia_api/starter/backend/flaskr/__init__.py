@@ -150,6 +150,14 @@ def create_app(test_config=None):
       'previous_questions':previous_question
     })
 
+  @app.errorhandler(400)
+  def bad_request(error):
+      return jsonify({
+          "success": False,
+          "error": 400,
+          "message": "Bad Request"
+      }), 400
+
   @app.errorhandler(404)
   def not_found(error):
       return jsonify({
@@ -165,6 +173,14 @@ def create_app(test_config=None):
           "error": 422,
           "message": "unprocessable"
       }), 422
+  
+  @app.errorhandler(500)
+  def internal_server_error(error):
+      return jsonify({
+          "success": False,
+          "error": 500,
+          "message": "500 Internal Server Error” "
+      }), 500
 
   @app.route('/')
   def hello():
