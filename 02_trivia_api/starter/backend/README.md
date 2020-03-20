@@ -572,7 +572,37 @@ DELETE '/questions/<int:question_id>'
     }
 
 POST '/quizzes'
-    -
+    - We get from the body the previous questions and the category
+    {
+    "previous_questions": [
+        20,
+        21,
+        19
+    ],
+    "quiz_category": {
+        "type": "Science",
+        "id": "1"
+    }
+    }
+
+    - Returns: previous questions and a random question which is not included in previsou question
+
+    And the result is:
+    {
+        "previous_questions": [
+            20,
+            21,
+            19
+        ],
+        "question": {
+            "answer": "One",
+            "category": 2,
+            "difficulty": 4,
+            "id": 18,
+            "question": "How many paintings did Van Gogh sell in his lifetime?"
+        },
+        "success": true
+    }
 
 
 ```
