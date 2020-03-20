@@ -22,8 +22,8 @@
 .button {
     width: 100px;
     margin-top: 5px;
-    background-color: dodgerblue;
-    color: white;
+    background-color: #de7119;
+    color: #dee3e2;
     padding: 3px 5px;
     align-self: center;
 }
