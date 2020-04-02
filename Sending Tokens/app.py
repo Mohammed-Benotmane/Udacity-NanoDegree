@@ -5,5 +5,6 @@ app = Flask(__name__)
 @app.route('/headers')
 def headers():
     test = request.headers['Authorization']
-    print(test)
+    token = test.split(' ')[1]
+    print(token)
     return 'nothing'
