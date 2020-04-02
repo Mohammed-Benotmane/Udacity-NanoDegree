@@ -1,4 +1,13 @@
 from flask import Flask,request,abort
+from functools import wraps
+
+def requires_auth(f):
+    @wraps(f)
+    def wrapper(*args,**kwargs):
+        jwt = get_token_auth_header()
+        return f(jwt,*args,**kwargs)
+    return wrapper
+
 
 app = Flask(__name__)
 
@@ -17,7 +26,8 @@ def get_token_auth_header():
     return token[1]
 
 @app.route('/headers')
-def headers():
-    jwt = get_token_auth_header()
+@requires_auth
+def headers(jwt):
+    
     print(jwt)
     return 'nothing'
