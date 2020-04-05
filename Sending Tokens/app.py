@@ -1,12 +1,13 @@
 from flask import Flask,request,abort
 from functools import wraps
 
-def requires_auth(f):
-    @wraps(f)
-    def wrapper(*args,**kwargs):
-        jwt = get_token_auth_header()
-        return f(jwt,*args,**kwargs)
-    return wrapper
+def requires_auth(permission=''):
+    def requires_auth_decorator(f):
+        @wraps(f)
+        def wrapper(*args,**kwargs):
+            jwt = get_token_auth_header()
+            return f(jwt,*args,**kwargs)
+        return wrapper
 
 
 app = Flask(__name__)
