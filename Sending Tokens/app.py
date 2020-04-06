@@ -122,3 +122,9 @@ def requires_auth(f):
 def headers(payload):
     print(payload)
     return 'Access Granted'
+
+@app.route('/image')
+@requires_auth
+def images(jwt):
+    print(jwt)
+    return 'not implemented'
