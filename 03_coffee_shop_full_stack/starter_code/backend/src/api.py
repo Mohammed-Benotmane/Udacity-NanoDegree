@@ -27,9 +27,10 @@ db_drop_and_create_all()
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks')
+@app.route('/drinks',methods=['GET'])
 def get_drinks():
-    return 'test'
+    drinks = Drink.query.all()
+    return jsonify(drinks)
 
 '''
 @TODO implement endpoint
