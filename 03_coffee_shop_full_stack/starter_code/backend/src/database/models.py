@@ -42,6 +42,8 @@ class Drink(db.Model):
     # the required datatype is [{'color': string, 'name':string, 'parts':number}]
     recipe =  Column(String(180), nullable=False)
 
+
+
     '''
     short()
         short form representation of the Drink model
@@ -105,3 +107,10 @@ class Drink(db.Model):
 
     def __repr__(self):
         return json.dumps(self.short())
+    
+    def format(self):
+        return {
+        'id': self.id,
+        'title': self.title,
+        'recipe': self.recipe
+        }

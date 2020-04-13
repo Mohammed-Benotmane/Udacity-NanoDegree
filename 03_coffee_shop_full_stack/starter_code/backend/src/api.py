@@ -30,7 +30,13 @@ db_drop_and_create_all()
 @app.route('/drinks',methods=['GET'])
 def get_drinks():
     drinks = Drink.query.all()
-    return jsonify(drinks)
+    formatted_drink = [drk.format() for drk in drinks]
+    return jsonify({
+        'Success':True,
+        'Drinks': formatted_drink
+    })
+
+
 
 '''
 @TODO implement endpoint
@@ -51,7 +57,19 @@ def get_drinks():
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks',methods=['POST'])
+def post_drink():
+    body = request.get_json()
+    new_title = body.get("title",None)
+    new_recipe = body.get("recipe",None)
+    new_recipe =  json.dumps(new_recipe)
+    str_recipe = str(new_recipe)
+    drink = Drink(title = new_title,recipe= str_recipe)
+    drink.insert()
+    return jsonify({
+        'success':True,
+        'drink': str_recipe
+    })
 
 '''
 @TODO implement endpoint
