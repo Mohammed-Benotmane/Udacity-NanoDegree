@@ -73,7 +73,6 @@ def post_drink(token):
     str_recipe = str(new_recipe)
     drink = Drink(title = new_title,recipe= str_recipe)
     drink.insert()
-    
     return jsonify({
         'Success':True,
         'Drinks': drink.long()
