@@ -64,6 +64,7 @@ def get_drinks_details():
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks',methods=['POST'])
+@requires_auth("post:drinks")
 def post_drink():
     body = request.get_json()
     new_title = body.get("title",None)
@@ -72,9 +73,10 @@ def post_drink():
     str_recipe = str(new_recipe)
     drink = Drink(title = new_title,recipe= str_recipe)
     drink.insert()
+    
     return jsonify({
-        'success':True,
-        'drink': str_recipe
+        'Success':True,
+        'Drinks': drink.long()
     })
 
 '''
