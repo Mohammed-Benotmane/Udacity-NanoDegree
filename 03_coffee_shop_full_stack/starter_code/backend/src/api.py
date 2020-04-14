@@ -3,7 +3,6 @@ from flask import Flask, request, jsonify, abort
 from sqlalchemy import exc
 import json
 from flask_cors import CORS
-
 from .database.models import db_drop_and_create_all, setup_db, Drink
 from .auth.auth import AuthError, requires_auth
 
@@ -90,7 +89,8 @@ def post_drink(token):
         or appropriate status code indicating reason for failure
 '''
 @app.route("/drinks/<drink_id>", methods=['PATCH'])
-def patch_drinks( drink_id):
+@requires_auth("patch:drinks")
+def patch_drinks(token ,drink_id):
     body = request.get_json()
     drink = Drink.query.get(drink_id)
     if body.get("title"):
