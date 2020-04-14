@@ -117,7 +117,8 @@ def patch_drinks(token ,drink_id):
         or appropriate status code indicating reason for failure
 '''
 @app.route("/drinks/<drink_id>", methods=['DELETE'])
-def delete_drinks( drink_id):
+@requires_auth("delete:drinks")
+def delete_drinks(token, drink_id):
     drink = Drink.query.get(drink_id)
     drink.delete()
     return jsonify({
