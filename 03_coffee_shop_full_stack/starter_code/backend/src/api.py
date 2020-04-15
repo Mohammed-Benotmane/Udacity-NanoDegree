@@ -120,6 +120,8 @@ def patch_drinks(token ,drink_id):
 @requires_auth("delete:drinks")
 def delete_drinks(token, drink_id):
     drink = Drink.query.get(drink_id)
+    if drink is None:
+        abort(404)
     drink.delete()
     return jsonify({
         "success":True,
