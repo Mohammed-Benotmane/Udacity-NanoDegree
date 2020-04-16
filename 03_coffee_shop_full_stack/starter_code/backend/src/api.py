@@ -106,7 +106,9 @@ def resource_not_found(error):
                     }), 404
 
 @app.errorhandler(AuthError)
-def handle_auth_error(err):
-    response = jsonify(err.error)
-    response.status_code = err.status_code
-    return response
+def auth_error(error):
+    return jsonify({
+                    "success": False, 
+                    "error": 401,
+                    "message": "Authorization header is expected."
+                    }), 401
