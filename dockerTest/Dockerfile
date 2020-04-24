@@ -1,3 +1,10 @@
-FROM  python:3.7.2-slim
+FROM python:3.7.2-slim
 
-ENTRYPOINT ["echo", "hello world"]
+COPY . /app
+WORKDIR /app
+
+RUN pip install --upgrade pip
+RUN pip install flask
+
+
+ENTRYPOINT ["python", "app.py"]
