@@ -18,7 +18,6 @@ CORS(app)
 def get_drinks():
     drinks = Drink.query.all()
     formatted_drink = [drk.short() for drk in drinks]
-
     return jsonify({
         'success':True,
         'drinks': formatted_drink
@@ -70,7 +69,7 @@ def patch_drinks(token ,drink_id):
     drink.update()
     return jsonify({
         "success": True,
-        "drinks": drink.long()
+        "drinks": [drink.long()]
     })
 
 @app.route("/drinks/<drink_id>", methods=['DELETE'])
